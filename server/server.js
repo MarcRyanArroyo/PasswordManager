@@ -1,20 +1,26 @@
 require("dotenv").config();
-const oExpress = require('express');
-const oMongoose = require("mongoose");
-const oBodyParser = require("body-parser");
-const cors = require("cors");
-const oLoginRoute = require("./routes/LoginRoute");
+import oExpress from 'express';
+import oBodyParser from 'body-parser';
+import cors from 'cors';
+import oLoginRoute from './routes/LoginRoute.js';
+import initializeDatabase from './models/DatabaseMigration';
 
 const oApp = oExpress();
 oApp.use(cors());
 oApp.use(oBodyParser.json());
 
-oMongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
-    console.log("Connected to MongoDB");
-}).catch((err) => {
-    console.error("Cant connect to mongodb:", err);
-});
-
 oApp.use("/api", oLoginRoute);
 
-oApp.listen(process.env.PORT, () => console.log(`Server running on port ${process.env.PORT}`));
+// Connect to the database before starting the server
+initializeDatabase().then((database) => {
+    db = database;
+    console.log('Connected to SQLite database.');
+
+  // Start the Express server after database connection is established
+    oApp.listen(process.env.PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
+}).catch((err) => {
+    console.error('Error connecting to database:', err);
+    process.exit(1); // Exit if database connection fails
+});

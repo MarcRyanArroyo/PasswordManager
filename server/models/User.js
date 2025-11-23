@@ -1,8 +1,6 @@
-const mongoose = require("mongoose");
+import oDb from './DatabaseMigration.js';
 
-const UserSchema = new mongoose.Schema({
-email: { type: String, required: true, unique: true },
-password: { type: String, required: true },
-});
-
-module.exports = mongoose.model("User", UserSchema);
+export const saveUser = async(oUser) => {
+    const sSaveUserQuery = 'INSERT INTO users (username, password) VALUES (?, ?)';
+    await oDb.run(sSaveUserQuery,[oUser.username, oUser.password]);
+};
