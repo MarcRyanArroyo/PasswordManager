@@ -13,7 +13,6 @@ export const Register = async (oReq, oRes) => {
     }
 };
 
-
 export const Login = async (oReq, oRes) =>  {
     try {
         const sUsername = oReq.body.username;
@@ -36,4 +35,8 @@ export const Login = async (oReq, oRes) =>  {
             error: oError.message
         });
     }
+};
+
+export const Home = (oReq, oRes) => {
+    oRes.status(200).json({ message:'welcome home'});
 };
